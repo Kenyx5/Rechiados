@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Viewport responsivo -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<!-- Safari no iPhone -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Meu Cardápio">
+
+<!-- Ícone do app no iPhone -->
+<link rel="apple-touch-icon" href="icone.png">
+
+<!-- PWA básico -->
+<link rel="manifest" href="manifest.json">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  
+  <meta name="description" content="Este site é um cardápio online feito por Lioqueni Macalo">
+  
+  <meta name="author" content="Lioqueni Macalo">
+  
+  <link rel="stylesheet" href="Cardapio.css">
+  <title>Cardápio</title>
+  <style>
+    *{
+  margin: 0px;
+  padding: 0px;
+  font-family: Sans-Serif;
+  
+}
+body{
+  background-image: linear-gradient(to left ,#b99447);
+}
+.loader{
+  position: fixed;
+  inset: 0;
+  background: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  animation: fadeout 1s ease 2s forwards;
+}
+.spinner{
+  width: 60px;
+  height: 60px;
+  border: 6px solid #555;
+  border-top: 6px solid #b99447;
+  border-radius:50%;
+  animation: spin 4s linear infinite;
+}
+@keyframes spin{
+  to{
+    transform: rotate(1000deg);
+  }
+}
+@keyframes fadeout{
+  to{
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+html{
+ scroll-behavior:smooth;
+}
+
+
+header{
+  background-image:url('imgs/fundo.webp');
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-shadow: 2px 2px 8px #7f7f7f;
+  height: 100vh;
+  width: 100%;
+}
+/*efeito de bebidas carrocel*/
+
+.gallery {
+  width: 100%;
+  max-width: 600px;
+  height: 250px;
+  position: relative;
+  overflow: hidden;
+}
+
+/*efeito fo slider rolando*/
+
+.slider-container{
+  width:90%;
+  max-width: 600px;
+  overflow:hidden;
+    
+}
+.slider{
+  display:flex;
+  animation: slide 6s infinite;
+}
+.slide{
+  min-width: 100%;
+  color:#fff;
+  text-align: left;
+  margin-top:52.5vh;
+  font-size: 7vh;
+}
+
+    @keyframes slide {
+      
+      25% { transform: translateX(0%); }
+      30% { transform: translateX(-100%); }
+      55% { transform: translateX(-100%); }
+      60% { transform: translateX(-200%); }
+      85% { transform: translateX(-200%); }
+      90% { transform: translateX(-300%); }
+      100% { transform: translateX(-300%); }
+    }
+.intro{
+  color: #fff;
+  font-size: 15px;
+  padding-top: 30px;
+}
+/*barra de navegação*/
+
+nav, .nave {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      
+}
+
+nav{
+  position:fixed;
+  background-image: linear-gradient(to left,rgb(123,123,123),#333);
+    box-shadow: 2px 2px 8px #7f7f7f;
+  bottom: -0.3%;
+  border-top-left-radius: 7px;
+  border-top-right-radius:7px;
+  z-index: 3;
+  height:60px;
+  width:100%;
+}
+.ultimo{
+  overflow: hidden;
+}
+.nave img{
+  text-decoration: none;
+  color: #fff;
+  z-index: 1;
+  margin: 18px;
+  transition: all 1s ease-in-out;
+}
+.nave img:hover{
+  border-radius: 20%;
+  background: #fff;
+  
+}
+.nave img{
+  width:28px;
+  
+}
+/*botão de instalar*/
+#installBtn{
+  position: absolute;
+    margin:10px;
+    padding:10px 20px; 
+    background:#d32f2f; 
+    color:#fff;
+    border:none; 
+    border-radius:8px; 
+    cursor:pointer;
+}
+#entradas,#magogas,#pizzas,#Doses-extras{
+  margin:160px 20px 160px 20px;
+}
+
+.iten img{
+  width: 100px;
+  padding:0;
+  
+} 
+.iten{
+  position: relative;
+  margin: 20px 10px ;
+  display: flex;
+  flex-direction: row;
+  border:1px solid #fff;
+  border-radius: 8px;
+ min-height:100px;
+  background: #fff;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+}
+.titulo{
+  font-size: 20px;
+  text-transform: capitalize;
+}
+p{
+  font-size: 10px;
+  margin-top:;
+  z-index: 20;
+}
+.inf{
+  margin-top: 10px;
+}
+/*precos , o estilo e a posição de cada um*/
+.preco{
+  position:absolute;
+  font-size: 20px;
+  text-align: right;
+  color: red;
+  font-style: italic;
+  bottom:0;
+  left:200px;
+font-family: 'Montserrat', sans-serif;
+
+}
+
+.refri{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  /* cor de fundo opcional */
+  padding: 20px 0;
+}
+
+.gallery {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.cards {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  animation: scroll 10s linear infinite;
+}
+
+.cards li {
+  flex: 0 0 auto;
+  width: 160px;
+  height: 200px;
+  border-radius: 15px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+}
+
+.cards li:hover {
+  transform: scale(1.1);
+}
+
+.cards img {
+  width: 100%;
+  height: 100%;
+
+}
+
+/* animação de deslizar */
+@keyframes scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+#botao{
+  position: fixed;
+  bottom:2%;
+  right:2%;
+  background:green;
+  padding: 15px;
+  z-index: 5;
+  border-radius: 50%;
+  transition: all 2s ease-in-oute;
+  box-shadow:0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+#botao img{
+  width: 20px;
+}
+#:hover{
+  transform: rotateY(360deg);
+  transition:2s ;
+  
+  background:linear-gradient(to left,#fff,#333);
+}
+/*responsividade para tablet*/
+
+@media screen and (min-width:768px){
+  .spinner{
+    width:120px;
+    height: 120vh;
+  }
+  .intro{
+    font-size: 30px;
+  }
+  .titulo{
+    font-size: 36px;
+  }
+  .iten img{
+    width:200px;
+  }
+  .iten{
+    width: auto;
+    height:auto;
+  }
+  p{
+    font-size: 20px;
+  }
+  .preco{
+    font-size: 30px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .slide{
+    font-size: 10vh;
+  }
+  .pratos{
+    width: 400px;
+    height: 600px;
+  }
+  .bbt{
+    width: 60px;
+    height: 60px;
+  }
+  #entradas,#magogas,#Sobremesas{
+  
+  display: grid;
+  grid-template-rows:  repeat(3,300px);
+gap:200px;
+}
+body{
+  overflow: auto;
+}
+.cards li{
+  width:700px;
+  max-height:300px;
+}
+
+  header {
+    width: 200%; 
+    height: 200%; /* ocupa a altura inteira da tela */
+    background-image: url("imgs/fundo2.webp"); /* substitui pelo caminho da imagem */
+    background-size: cover; /* faz a imagem cobrir toda a área */
+    background-position: center; /* centraliza a imagem */
+    background-repeat: no-repeat; /* evita repetição */
+    margin: 0;
+    padding: 0;
+  }
+.inf  p {
+    display: none;
+  }
+
+}
+.bbt{
+  position: absolute;
+  right:0;
+  bottom: -1;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  display:flex;
+  justify-content: start;
+  justify-itens: start;
+  border:none;
+  padding: 10px;
+  border-radius: 30%;
+  color:#fff;
+  background:linear-gradient(to left,#6196C1,black);
+}
+  </style>
+</head>
+<body>
+  <button id="installBtn">Instalar Cardápio</button>
+
+<div id="iosHint" hidden>
+  📱 iPhone: Compartilhar → Adicionar à Tela de Início
+</div>
+<header>
+  <div class="loader">
+    <div class="spinner"></div>
+  </div>
+  <div id="botao">
+    <a href="Carrinho.html"><img src="imgs/correio.png" alt="Link para o carrinho"></a>
+  </div>
+  <!-- Barra de navegação -->
+  <nav>
+    <div class="nave"><a href="#magogas"><img src="/batatas-fritas.png" alt="fast food"></a></div>
+    <div class="nave"><a href="#pizzas"><img src="imgs/pizza (1).png" alt="pratos"></a></div>
+    <div class="nave"><a href="#Doses-extras"><img src="imgs/batatas-fritas.png" alt="sobremesas"></a></div>
+  </nav>
+
+  <!-- Slider -->
+  <div class="slider-container">
+    <div class="slider">
+      <div class="slide">Delicioso</div>
+      <div class="slide">Crocante</div>
+      <div class="slide">Sublime</div>
+    </div>
+  </div>
+
+  <p class="intro">
+    Bem-vindo ao nosso cardápio online! Aqui você encontra nossos pratos de forma rápida e prática. Explore as opções, escolha seu favorito e aproveite cada sabor.
+  </p>
+
+<nav>
+  <div class="nave"><a href="#magogas"><img src="imgs/hamburguer.png" alt="humburgers"></a></div>
+  <div class="nave"><a href="#pizzas"><img src="imgs/pizza (1).png" alt="pizzas"></a></div>
+  <div class="nave"><a href="#Doses-extras"><img src="imgs/batatas-fritas.png" alt="snacks"></a></div>
+</nav>
+</header>
+
+<!-- Entradas -->
+<section id="entradas">
+  <div class="iten">
+    <img src="imgs/xtudo.webp" alt="Xtudo">
+    <div class="inf"><span class="titulo">X-tudo</span>
+      <p>peito de frango panado,batatas,queijo cheddar,bacon salteado,molho e ovo</p>
+    </div>
+    <span class="preco">3000 Kz</span>
+    <button class="bbt" data-name="X-tudo" data-price="3000" data-img="imgs/xtudo.webp">+</button>
+  </div>
+
+  <div class="iten">
+    <img src="imgs/brincalhao.webp" alt="cachorro-brincalhao">
+    <div class="inf"><span class="titulo">Brincalhaoo</span>
+      <p>peito de frango,bacon,queijo cheddar, chouriço,milho doce</p>
+    </div>
+    <span class="preco">3000kz</span>
+    <button class="bbt" data-name="brincalhao" data-price="3000" data-img="imgs/brincalhao.webp">+</button>
+  </div>
+
+  <div class="iten">
+    <img src="imgs/xtudo-com-pão.webp" alt="xtudo-com-pão">
+    <div class="inf"><span class="titulo">X-tudo(com pão)</span>
+      <p>peito de frango panado,batatas,queijo cheddar,bacon salteado,molho e ovo</p>
+    </div>
+    <span class="preco">3.500 Kz</span>
+    <button class="bbt" data-name="xtudo-com-pão" data-price="3500" data-img="imgs/xtudo-com-pão.webp">+</button>
+  </div>
+</section>
+
+<!-- Pratos -->
+<section id="magogas">
+  <div class="iten">
+    <img src="imgs/magoga.webp" alt="magoga">
+    <div class="inf"><span class="titulo">Pede mais</span>
+      <p>magoga com peito de frango acebolado,molho do finança e molho de alho</p>
+    </div>
+    <span class="preco">1500Kz</span>
+    <button class="bbt" data-name="pede mais" data-price="1500" data-img="imgs/magoga.webp">+</button>
+  </div>
+
+  <div class="iten">
+    <img src="imgs/magoga.webp" alt="pede mais+">
+    <div class="inf"><span class="titulo">Pede mais+</span>
+      <p>magoga com bacon, peito de frango acebolado,molho do finança e molho de alho</p>
+    </div>
+    <span class="preco">1.900Kz</span>
+    <button class="bbt" data-name="Pede mais+" data-price="1900" data-img="imgs/magoga.webp">+</button>
+  </div>
+
+  <div class="iten">
+    <img src="imgs/magoga.webp" alt="cheio de cheddar">
+    <div class="inf"><span class="titulo">cheio de cheddar</span>
+      <p>magoga queijo cheddar de frango acebolado,molho do finança e molho de alho</p>
+    </div>
+    <span class="preco">1.900 Kz</span>
+    <button class="bbt" data-name="cheio de cheddar" data-price="1900" data-img="imgs/magoga.webp">+</button>
+  </div>
+  <div class="iten">
+    <img src="imgs/magoga.webp" alt="chouriço no pão">
+    <div class="inf"><span class="titulo">Chouriço no pão</span>
+      <p>magoga com chourição de frango acebolado,molho do finança e molho de alho</p>
+    </div>
+    <span class="preco">1.900 Kz</span>
+    <button class="bbt" data-name="Chouriço no pão" data-price="1900" data-img="imgs/magoga.webp">+</button>
+  </div>
+  
+</section>
+
+
+
+<!-- pizzas -->
+<section id="pizzas">
+  <!--pizza calabresa pequena-->
+  <div class="iten">
+    <img src="imgs/calabresa.webp" alt="pizza calabresa">
+    <div class="inf"><span class="titulo">Calabresa pequena</span>
+      <p>Calabresa fatiada com sabor marcante sobre molho de tomate e queijo derretido. Simples, forte e a mais pedida.</p>
+    </div>
+    <span class="preco">4000 Kz</span>
+    <button class="bbt" data-name="pizza-Calabresa-pequena" data-price="4000" data-img="imgs/calabresa.webp">+</button>
+  </div>
+<!--pizza calabresa média-->
+  <div class="iten">
+    <img src="imgs/calabresa.webp" alt="pizza calabreza media">
+    <div class="inf"><span class="titulo">Calabresa media</span>
+      <p>Calabresa fatiada com sabor marcante sobre molho de tomate e queijo derretido. Simples, forte e a mais pedida.</p>
+    </div>
+    <span class="preco">5.500 Kz</span>
+    <button class="bbt" data-name="Calabresa-média" data-price="5.500" data-img="imgs/calabresa.webp">+</button>
+  </div>
+<!--pizza calabresa grande-->
+  <div class="iten">
+    <img src="imgs/calabresa.webp" alt="pizza-Calabresa-grande">
+    <div class="inf"><span class="titulo">pizza-Calabresa-grande</span>
+      <p>Calabresa fatiada com sabor marcante sobre molho de tomate e queijo derretido. Simples, forte e a mais pedida.</p>
+    </div>
+    <span class="preco">7.500 Kz</span>
+    <button class="bbt" data-name="pizza-Calabresa-grande" data-price="7.500" data-img="imgs/calabresa.webp">+</button>
+  </div>
+  <!-- pizza de queijo-->
+    <div class="iten">
+    <img src="imgs/queijo.webp" alt="pizza de queijo pequena">
+    <div class="inf"><span class="titulo">pizza pequena de queijo</span>
+      <p>Molho de tomate coberto com queijo bem derretido e cremoso. Clássica, leve e agrada a todos.</p>
+    </div>
+    <span class="preco">4.000 Kz</span>
+    <button class="bbt" data-name="pizza-de-queijo-pequena" data-price="4000" data-img="imgs/queijo.webp">+</button>
+  </div>
+
+  <div class="iten">
+    <img src="imgs/queijo.webp" alt="pizza-de-queijo-média">
+    <div class="inf"><span class="titulo">pizza-de-queijo</span>
+      <p>Molho de tomate coberto com queijo bem derretido e cremoso. Clássica, leve e agrada a todos.</p>
+    </div>
+    <span class="preco">5.500 Kz</span>
+    <button class="bbt" data-name="pizza-de-queijo-média" data-price="5.500" data-img="imgs/queijo.webp">+</button>
+  </div>
+
+  <div class="iten">
+    <img src="imgs/queijo.webp" alt="pizza-de-queijo-grande">
+    <div class="inf"><span class="titulo">pizza grande</span>
+      <p>Molho de tomate coberto com queijo bem derretido e cremoso. Clássica, leve e agrada a todos.</p>
+    </div>
+    <span class="preco">7.500 Kz</span>
+    <button class="bbt" data-name="pizza-de-queijo-grande" data-price="7500" data-img="imgs/queijo.webp">+</button>
+  </div>
+    <div class="iten">
+    <img src="imgs/frango.webp" alt="pizza-pequena-de-frango">
+    <div class="inf"><span class="titulo">pizza-pequena-
+    frango</span>
+      <p>Frango desfiado bem temperado com queijo derretido sobre molho de tomate. Sabor suave e muito popular.</p>
+    </div>
+    <span class="preco">4.000 Kz</span>
+    <button class="bbt" data-name="pizza-pequena-de-frango" data-price="4000" data-img="imgs/queijo.webp">+</button>
+  </div>
+
+  <div class="iten">
+    <img src="imgs/frango.webp" alt="pizza-média-
+    frango">
+    <div class="inf"><span class="titulo">Pizza média</span>
+      <p>Frango desfiado bem temperado com queijo derretido sobre molho de tomate. Sabor suave e muito popular.</p>
+    </div>
+    <span class="preco">5.500 Kz</span>
+    <button class="bbt" data-name="pizza-média-de-frango" data-price="5500" data-img="imgs/frango.webp">+</button>
+  </div>
+
+  <div class="iten">
+    <img src="imgs/frango.webp" alt="pizza grande">
+    <div class="inf"><span class="titulo">Pizza grande</span>
+      <p>Frango desfiado bem temperado com queijo derretido sobre molho de tomate. Sabor suave e muito popular.</p>
+    </div>
+    <span class="preco">7.500 Kz</span>
+    <button class="bbt" data-name="pizza-grande-
+    frango" data-price="7500" data-img="imgs/frango.webp">+</button>
+  </div>
+  
+</section>
+<!-- Doses-extras -->
+<section id="Doses-extras">
+  <div class="iten">
+    <img src="imgs/batataf.webp" alt="batata frita">
+    <div class="inf"><span class="titulo">Batatas dentro do pão</span>
+      <p>uma bela doze de batatas fritas dentro do pão para adicionar um sabor crocante</p>
+    </div>
+    <span class="preco">500 Kz</span>
+    <button class="bbt" data-name="Batata dentro do pão" data-price="500" data-img="imgs/batataf.webp">+</button>
+  </div>
+
+  <div class="iten">
+    <img src="imgs/cebola.webp" alt="dose estra de cebola">
+    <div class="inf"><span class="titulo">Cebola crisp</span>
+      <p>uma dose estra de cebola crisp para dar aquele crocante no meu da sua boca.</p>
+    </div>
+    <span class="preco">500 Kz</span>
+    <button class="bbt" data-name="Cebola crisp" data-price="500" data-img="imgs/cebola.webp">+</button>
+  </div>
+
+  <div class="iten ultimo">
+    <img src="imgs/fatia.webp" alt="fatia de queijo">
+    <div class="inf"><span class="titulo">Dose de queijo</span>
+      <p>uma quantidade de queijo cheddar a+ na sua comida.</p>
+    </div>
+    <span class="preco">500 Kz</span>
+    <button class="bbt" data-name="Dose de queijo" data-price="500" data-img="imgs/fatia.webp">+</button>
+  </div>
+
+    <span class="preco">500 Kz</span>
+    <button class="bbt" data-name="Dose de bacon" data-price="500" data-img="imgs/bacon.webp">+</button>
+  </div>
+  <div class="iten ultimo">
+    <img src="imgs/sandes.webp" alt="sandes dupla">
+    <div class="inf"><span class="titulo">Sandez dupla</span>
+      <p>uma sandez dupla maior que a normal.</p>
+    </div>
+    <span class="preco">2000 Kz</span>
+    <button class="bbt" data-name="Sandes dupla" data-price="2000" data-img="imgs/sandes.webp">+</button>
+  </div>
+</section>
+<script>
+const botoes = document.querySelectorAll(".bbt");
+
+botoes.forEach((botao) => {
+  botao.addEventListener("click", () => {
+    const nome = botao.getAttribute("data-name");
+    const preco = botao.getAttribute("data-price");
+    const img = botao.getAttribute("data-img");
+
+    let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+    carrinho.push({ nome, preco, img });
+    localStorage.setItem("carrinho", JSON.stringify(carrinho));
+
+    alert(nome + " adicionado ao carrinho!");
+  });
+});
+
+</script>
+
+<script src="app.js">
+  
+</script>
+</body>
+</html>
