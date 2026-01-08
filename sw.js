@@ -53,7 +53,7 @@ const FILES_TO_CACHE = [
   "./Carrinho.html",
   "./Cardapio.css",
   "./app.js",
-  "./imgs/pizza-1.png",
+  "./imgs/pizza (1).png",
   "./imgs/batatas-fritas.png",
   "./imgs/bacon.webp",
   "./imgs/batataf.webp",
