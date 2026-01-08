@@ -10,6 +10,7 @@ const FILES_TO_CACHE = [
   "imgs/batataf.webp",
   "imgs/batatas-fritas.png",
   "imgs/brincalhao.webp",
+"imgs/fundo2.webp",
   "imgs/calabresa.webp",
   "imgs/Capa.webp",
   "imgs/cebola.webp",
