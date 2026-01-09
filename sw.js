@@ -4,6 +4,8 @@ const CACHE_NAME = "meu-cache-v3";
 // Cache apenas de assets estáticos (IMAGENS)
 const FILES_TO_CACHE = [
   "./",
+    "/index.html",
+    "/Cardapio.css",
   "./imgs/pizza (1).png",
   "./imgs/batatas-fritas.png",
   "./imgs/bacon.webp",
