@@ -1,59 +1,9 @@
-/*const CACHE_NAME = "meu-cache";
-const FILES_TO_CACHE = [
-  "/index.html",
-  "/Carrinho.html",
-  "/Cardapio.css",
-  "/app.js",
-  "imgs/pizza (1).png",
-  "imgs/batatas-fritas.png",
-  "imgs/bacon.webp",
-  "imgs/batataf.webp",
-  "imgs/batatas-fritas.png",
-  "imgs/brincalhao.webp",
-"imgs/fundo2.webp",
-  "imgs/calabresa.webp",
-  "imgs/Capa.webp",
-  "imgs/cebola.webp",
-  "imgs/correio.png",
-  "imgs/fatia.webp",
-  "imgs/frango.webp",
-  "imgs/fundo.webp",
-  "imgs/hamburguer.png",
-  "imgs/magoga.webp",
-  "imgs/pizza-1.png",
-  "imgs/queijo.webp",
-  "imgs/sandes.webp",
-  "imgs/xtudo-com-pao.webp",
-  "imgs/xtudo.webp"
+// ===== CONFIGURAÇÃO =====
+const CACHE_NAME = "meu-cache-v3";
 
-];
-
-// Instalando e cacheando os arquivos
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(FILES_TO_CACHE))
-  );
-});
-
-// Interceptando requests para servir do cache
-self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request))
-  );
-});*/
-
-
-
-  // Versão do cache — mude sempre que atualizar arquivos
-const CACHE_NAME = "meu-cache-v2";
-
-// Lista de arquivos para cache — coloque apenas arquivos que existem
+// Cache apenas de assets estáticos (IMAGENS)
 const FILES_TO_CACHE = [
   "./",
-  "./index.html",
-  "./Carrinho.html",
-  "./Cardapio.css",
-  "./app.js",
   "./imgs/pizza (1).png",
   "./imgs/batatas-fritas.png",
   "./imgs/bacon.webp",
@@ -74,49 +24,73 @@ const FILES_TO_CACHE = [
   "./imgs/xtudo.webp"
 ];
 
-// Instalando e cacheando arquivos
+// ===== INSTALL =====
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      // Adiciona arquivos individualmente para ignorar erros
-      return Promise.all(
-        FILES_TO_CACHE.map(file =>
-          cache.add(file).catch(err => {
-            console.warn("Falha ao adicionar ao cache:", file, err);
-          })
-        )
-      );
-    }).then(() => self.skipWaiting())
+      return cache.addAll(FILES_TO_CACHE);
+    })
   );
+  self.skipWaiting();
 });
 
-// Ativando SW e removendo caches antigos
+// ===== ACTIVATE =====
 self.addEventListener("activate", event => {
   event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
+    caches.keys().then(keys =>
+      Promise.all(
         keys.map(key => {
           if (key !== CACHE_NAME) {
-            console.log("Deletando cache antigo:", key);
             return caches.delete(key);
           }
         })
-      );
-    })
+      )
+    )
   );
   self.clients.claim();
 });
 
-// Intercepta requests e responde do cache ou da rede
+// ===== FETCH =====
 self.addEventListener("fetch", event => {
+  const req = event.request;
+
+  // HTML → network first (sempre atualiza)
+  if (req.destination === "document") {
+    event.respondWith(
+      fetch(req)
+        .then(res => {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, copy));
+          return res;
+        })
+        .catch(() => caches.match("./"))
+    );
+    return;
+  }
+
+  // CSS e JS → network first
+  if (req.destination === "style" || req.destination === "script") {
+    event.respondWith(
+      fetch(req)
+        .then(res => {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, copy));
+          return res;
+        })
+        .catch(() => caches.match(req))
+    );
+    return;
+  }
+
+  // Imagens → cache first
   event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request).catch(() => {
-        // Opcional: fallback offline (ex: página offline)
-        if (event.request.destination === "document") {
-          return caches.match("./index.html");
-        }
-      });
-    })
+    caches.match(req).then(res => res || fetch(req))
   );
+});
+
+// ===== CONTROLE DE ATUALIZAÇÃO =====
+self.addEventListener("message", event => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
