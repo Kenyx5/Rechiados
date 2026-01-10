@@ -90,145 +90,153 @@
 <button id="enviar">Enviar pedido no WhatsApp</button>
 
 <script>
-/* =======================
-   DADOS
-======================= */
-let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-let usuario  = JSON.parse(localStorage.getItem("usuario")) || null;
-
-const restaurante = [-8.864642, 13.227171]; // Coordenadas do restaurante
-const numeroWhatsApp ="244931555634"; // Seu número de WhatsApp
-
-/* =======================
-   CARRINHO
-======================= */
-function atualizarCarrinho() {
-  const lista = document.getElementById("cart");
-  lista.innerHTML = "";
-
-  let total = 0;
-
-  carrinho.forEach((item, index) => {
-    const li = document.createElement("li");
-
-    const img = document.createElement("img");
-    img.src = item.img || "";
-    li.appendChild(img);
-
-    const span = document.createElement("span");
-    span.textContent = `${item.nome} - ${item.preco} Kz`;
-    li.appendChild(span);
-
-    const btn = document.createElement("button");
-    btn.textContent = "Remover";
-    btn.onclick = () => {
-      carrinho.splice(index, 1);
-      localStorage.setItem("carrinho", JSON.stringify(carrinho));
-      atualizarCarrinho();
-    };
-    li.appendChild(btn);
-
-    lista.appendChild(li);
-
-    total += Number(item.preco);
-  });
-
-  document.getElementById("total").textContent = "Total: " + total + " Kz";
-}
-
-/* =======================
-   MAPA
-======================= */
-function inicializarMapa() {
-  const map = L.map("map").setView(restaurante, 15);
-
-  L.tileLayer("https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.{ext}", {
-    maxZoom: 20,
-    ext: "png"
-  }).addTo(map);
-
-  L.marker(restaurante).addTo(map).bindPopup("Restaurante").openPopup();
-
-  if (usuario?.lat && usuario?.lng) {
-    L.marker([usuario.lat, usuario.lng]).addTo(map).bindPopup("Você está aqui");
-
-    L.Routing.control({
-      waypoints: [
-        L.latLng(usuario.lat, usuario.lng),
-        L.latLng(restaurante[0], restaurante[1])
-      ],
-      draggableWaypoints: false,
-      addWaypoints: false
-    }).addTo(map);
-  }
-}
-
-/* =======================
-   WHATSAPP
-======================= */
-// Número da lanchonete (sem +, só DDD + número)
-const numeroWhatsApp = "244931555634";
-
-document.getElementById("enviar").addEventListener("click", () => {
-  if (!carrinho || carrinho.length === 0) {
-    alert("Carrinho vazio");
-    return;
-  }
-
-  const enviarPedido = (localizacaoMsg) => {
-    let texto = "Meu pedido:\n";
-
-    carrinho.forEach((item, i) => {
-      texto += `${i + 1}. ${item.nome} - ${item.preco} Kz\n`;
-    });
-
-    const total = carrinho.reduce((sum, item) => sum + Number(item.preco || 0), 0);
-    texto += `\nTotal: ${total} Kz\n\n${localizacaoMsg}`;
-
-    abrirWhatsApp(texto);
-  };
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const mapsUrl = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-        enviarPedido(`Minha localização: ${mapsUrl}`);
-      },
-      () => enviarPedido("Pedido enviado sem localização"),
-      { enableHighAccuracy: true, timeout: 10000 }
-    );
-  } else {
-    enviarPedido("Pedido enviado sem localização");
-  }
-});
-
-function abrirWhatsApp(texto) {
-  const encoded = encodeURIComponent(texto);
-  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-  if (isIOS) {
-    // Safari / iOS
-    // tenta abrir o app WhatsApp
-    window.location.href = `whatsapp://send?phone=${numeroWhatsApp}&text=${encoded}`;
-
-    // fallback seguro se app não abrir (abre WhatsApp Web)
-    setTimeout(() => {
-      window.location.href = `https://wa.me/${numeroWhatsApp}?text=${encoded}`;
-    }, 1500);
-
-  } else {
-    // Android / Desktop
-    window.open(`https://wa.me/${numeroWhatsApp}?text=${encoded}`, "_blank");
-  }
-}
-
-/* =======================
-   INIT
-======================= */
-atualizarCarrinho();
-inicializarMapa();
-
-</script>
-
+‎Bincalhão 
+‎Chouricão bacon batata , queijo cheddar 
+‎Repetir o brincalhão e dar o nome de rechiados 3500kz
+‎(peito de frango a cebolado, batata bacon ovo chourição queijo cheddar e fiambre)
+‎5827e895e3f0705d378e4d4ff63993915056dae7
+‎
+‎
+‎
+‎<script>  
+‎/* =======================  
+‎   DADOS  
+‎======================= */  
+‎let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];  
+‎let usuario  = JSON.parse(localStorage.getItem("usuario")) || null;  
+‎  
+‎const restaurante = [-8.864642, 13.227171]; // Coordenadas do restaurante  
+‎const numeroWhatsApp ="244931555634"; // Seu número de WhatsApp  
+‎  
+‎/* =======================  
+‎   CARRINHO  
+‎======================= */  
+‎function atualizarCarrinho() {  
+‎  const lista = document.getElementById("cart");  
+‎  lista.innerHTML = "";  
+‎  
+‎  let total = 0;  
+‎  
+‎  carrinho.forEach((item, index) => {  
+‎    const li = document.createElement("li");  
+‎  
+‎    const img = document.createElement("img");  
+‎    img.src = item.img || "";  
+‎    li.appendChild(img);  
+‎  
+‎    const span = document.createElement("span");  
+‎    span.textContent = `${item.nome} - ${item.preco} Kz`;  
+‎    li.appendChild(span);  
+‎  
+‎    const btn = document.createElement("button");  
+‎    btn.textContent = "Remover";  
+‎    btn.onclick = () => {  
+‎      carrinho.splice(index, 1);  
+‎      localStorage.setItem("carrinho", JSON.stringify(carrinho));  
+‎      atualizarCarrinho();  
+‎    };  
+‎    li.appendChild(btn);  
+‎  
+‎    lista.appendChild(li);  
+‎  
+‎    total += Number(item.preco);  
+‎  });  
+‎  
+‎  document.getElementById("total").textContent = "Total: " + total + " Kz";  
+‎}  
+‎  
+‎/* =======================  
+‎   MAPA  
+‎======================= */  
+‎function inicializarMapa() {  
+‎  const map = L.map("map").setView(restaurante, 15);  
+‎  
+‎  L.tileLayer("https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.{ext}", {  
+‎    maxZoom: 20,  
+‎    ext: "png"  
+‎  }).addTo(map);  
+‎  
+‎  L.marker(restaurante).addTo(map).bindPopup("Restaurante").openPopup();  
+‎  
+‎  if (usuario?.lat && usuario?.lng) {  
+‎    L.marker([usuario.lat, usuario.lng]).addTo(map).bindPopup("Você está aqui");  
+‎  
+‎    L.Routing.control({  
+‎      waypoints: [  
+‎        L.latLng(usuario.lat, usuario.lng),  
+‎        L.latLng(restaurante[0], restaurante[1])  
+‎      ],  
+‎      draggableWaypoints: false,  
+‎      addWaypoints: false  
+‎    }).addTo(map);  
+‎  }  
+‎}  
+‎  
+‎/* =======================  
+‎   WHATSAPP  
+‎======================= */  
+‎// Número da lanchonete (sem +, só DDD + número)  
+‎const numeroWhatsApp = "244931555634";  
+‎  
+‎document.getElementById("enviar").addEventListener("click", () => {  
+‎  if (!carrinho || carrinho.length === 0) {  
+‎    alert("Carrinho vazio");  
+‎    return;  
+‎  }  
+‎  
+‎  const enviarPedido = (localizacaoMsg) => {  
+‎    let texto = "Meu pedido:\n";  
+‎  
+‎    carrinho.forEach((item, i) => {  
+‎      texto += `${i + 1}. ${item.nome} - ${item.preco} Kz\n`;  
+‎    });  
+‎  
+‎    const total = carrinho.reduce((sum, item) => sum + Number(item.preco || 0), 0);  
+‎    texto += `\nTotal: ${total} Kz\n\n${localizacaoMsg}`;  
+‎  
+‎    abrirWhatsApp(texto);  
+‎  };  
+‎  
+‎  if (navigator.geolocation) {  
+‎    navigator.geolocation.getCurrentPosition(  
+‎      (pos) => {  
+‎        const mapsUrl = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;  
+‎        enviarPedido(`Minha localização: ${mapsUrl}`);  
+‎      },  
+‎      () => enviarPedido("Pedido enviado sem localização"),  
+‎      { enableHighAccuracy: true, timeout: 10000 }  
+‎    );  
+‎  } else {  
+‎    enviarPedido("Pedido enviado sem localização");  
+‎  }  
+‎});  
+‎  
+‎function abrirWhatsApp(texto) {  
+‎  const encoded = encodeURIComponent(texto);  
+‎  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);  
+‎  
+‎  if (isIOS) {  
+‎    // Safari / iOS  
+‎    // tenta abrir o app WhatsApp  
+‎    window.location.href = `whatsapp://send?phone=${numeroWhatsApp}&text=${encoded}`;  
+‎  
+‎    // fallback seguro se app não abrir (abre WhatsApp Web)  
+‎    setTimeout(() => {  
+‎      window.location.href = `https://wa.me/${numeroWhatsApp}?text=${encoded}`;  
+‎    }, 1500);  
+‎  
+‎  } else {  
+‎    // Android / Desktop  
+‎    window.open(`https://wa.me/${numeroWhatsApp}?text=${encoded}`, "_blank");  
+‎  }  
+‎}  
+‎  
+‎/* =======================  
+‎   INIT  
+‎======================= */  
+‎atualizarCarrinho();  
+‎inicializarMapa();  
+‎  
+‎</script>  
 </body>
 </html>
