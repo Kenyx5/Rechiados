@@ -1,40 +1,47 @@
-// app.js
+// Detectar iOS corretamente
+const isIOS =
+  /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-// Registrar o Service Worker
-if ("serviceWorker" in navigator) {
+// ===============================
+// SERVICE WORKER (Android apenas)
+// ===============================
+if ("serviceWorker" in navigator && !isIOS) {
   navigator.serviceWorker.register("/sw.js")
-    .then(() => console.log("Service Worker registrado!"))
-    .catch(err => console.log("Erro ao registrar SW:", err));
+    .then(() => console.log("Service Worker registrado (Android)"))
+    .catch(err => console.error("Erro ao registrar SW:", err));
+} else {
+  console.log("iOS detectado: Service Worker desativado");
 }
 
-// Lógica do botão PWA
+// ===============================
+// BOTÃO DE INSTALAÇÃO PWA
+// ===============================
 const installBtn = document.getElementById("installBtn");
 const iosHint = document.getElementById("iosHint");
 
 let deferredPrompt = null;
-const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 
-// Evento Android para instalação
+// Android: evento de instalação
 window.addEventListener("beforeinstallprompt", (event) => {
+  if (isIOS) return;
+
   event.preventDefault();
   deferredPrompt = event;
-  installBtn.hidden = false; // mostra o botão só quando disponível
-  console.log("beforeinstallprompt disparado!");
+  installBtn.hidden = false;
+  console.log("beforeinstallprompt (Android)");
 });
 
-// Clique no botão de instalar
+// Clique no botão
 installBtn.addEventListener("click", async () => {
   if (deferredPrompt) {
     deferredPrompt.prompt();
-    const choice = await deferredPrompt.userChoice;
-    if (choice.outcome === "accepted") {
-      alert("✅ App instalado com sucesso!");
-    }
+    await deferredPrompt.userChoice;
     deferredPrompt = null;
   } else if (isIOS) {
     iosHint.hidden = false;
-    alert("No iPhone: toque em Compartilhar → Adicionar à Tela de Início");
+    alert("No iPhone: Compartilhar → Adicionar à Tela de Início");
   } else {
-    alert("Seu navegador não suporta instalação do app.");
+    alert("Instalação não suportada");
   }
 });
