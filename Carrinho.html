@@ -152,19 +152,26 @@ function inicializarMapa() {
   if (usuario?.lat && usuario?.lng) {
     L.marker([usuario.lat, usuario.lng]).addTo(map).bindPopup("Você está aqui");
 
-    L.Routing.control({
-      waypoints: [
-        L.latLng(usuario.lat, usuario.lng),
-        L.latLng(restaurante[0], restaurante[1])
-      ],
-      draggableWaypoints: false,
-      addWaypoints: false
-    }).addTo(map);
+    try {
+      L.Routing.control({
+        waypoints: [
+          L.latLng(usuario.lat, usuario.lng),
+          L.latLng(restaurante[0], restaurante[1])
+        ],
+        draggableWaypoints: false,
+        addWaypoints: false
+      }).addTo(map);
+    } catch (e) {
+      // Se o roteamento falhar por qualquer motivo, não quebrar o mapa
+      console.warn("Roteamento falhou:", e);
+    }
   }
 }
 
 /* =======================
    WHATSAPP
+   Compatível com iPhone/Safari e dispositivos sem Chrome:
+   usar sempre o link https://wa.me/... para máxima compatibilidade.
 ======================= */
 document.getElementById("enviar").addEventListener("click", () => {
   if (!carrinho.length) {
@@ -201,19 +208,8 @@ document.getElementById("enviar").addEventListener("click", () => {
 
 function abrirWhatsApp(texto) {
   const encoded = encodeURIComponent(texto);
-  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-  if (isIOS) {
-    // Safari / iOS
-    window.location.href = `whatsapp://send?phone=${numeroWhatsApp}&text=${encoded}`;
-    // fallback: WhatsApp Web
-    setTimeout(() => {
-      window.location.href = `https://wa.me/${numeroWhatsApp}?text=${encoded}`;
-    }, 1500);
-  } else {
-    // Android / Desktop
-    window.open(`https://wa.me/${numeroWhatsApp}?text=${encoded}`, "_blank");
-  }
+  // usar wa.me para compatibilidade ampla (iPhone Safari, Android sem Chrome, desktop)
+  window.location.href = `https://wa.me/${numeroWhatsApp}?text=${encoded}`;
 }
 
 /* =======================
