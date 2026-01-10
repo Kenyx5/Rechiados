@@ -97,7 +97,7 @@ let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 let usuario  = JSON.parse(localStorage.getItem("usuario")) || null;
 
 const restaurante = [-8.864642, 13.227171]; // Coordenadas do restaurante
- // Seu número de WhatsApp
+const numeroWhatsApp = "244926247279"; // Seu número de WhatsApp
 
 /* =======================
    CARRINHO
@@ -166,60 +166,60 @@ function inicializarMapa() {
 /* =======================
    WHATSAPP
 ======================= */
+document.getElementById("enviar").addEventListener("click", () => {
+  if (!carrinho.length) {
+    alert("Carrinho vazio");
+    return;
+  }
 
+  const enviarPedido = (localizacaoMsg) => {
+    let texto = "Meu pedido:\n";
+    carrinho.forEach((item, i) => {
+      texto += `${i + 1}. ${item.nome} - ${item.preco} Kz\n`;
+    });
+    const total = carrinho.reduce((s, i) => s + Number(i.preco), 0);
+    texto += `\nTotal: ${total} Kz\n\n${localizacaoMsg}`;
+    abrirWhatsApp(texto);
+  };
 
-// Variáveis globais de exemplo
-let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-let usuario  = JSON.parse(localStorage.getItem("usuario")) || null;
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const mapsUrl = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+        enviarPedido(`Minha localização: ${mapsUrl}`);
+      },
+      () => enviarPedido("Pedido enviado sem localização")
+    );
+  } else {
+    enviarPedido("Pedido enviado sem localização");
+  }
+});
 
-(function () {
-  const btn = document.getElementById("enviar");
-  if (!btn) return;
+function abrirWhatsApp(texto) {
+  const encoded = encodeURIComponent(texto);
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-  btn.addEventListener("click", () => {
-    // 🔒 Evita clique duplo
-    btn.disabled = true;
-    btn.textContent = "Abrindo WhatsApp...";
+  if (isIOS) {
+    // iOS - Safari e PWA
+    window.location.href = `whatsapp://send?phone=${numeroWhatsApp}&text=${encoded}`;
 
-    try {
-      let texto = "Meu pedido:\n";
+    // fallback se o app não abrir
+    setTimeout(() => {
+      window.location.href = `https://wa.me/${numeroWhatsApp}?text=${encoded}`;
+    }, 1500);
 
-      if (carrinho.length > 0) {
-        carrinho.forEach((item, i) => {
-          texto += `${i + 1}. ${item.nome} - ${item.preco} Kz\n`;
-        });
-        const total = carrinho.reduce((s, item) => s + Number(item.preco || 0), 0);
-        texto += `\nTotal: ${total} Kz\n`;
-      } else {
-        texto += "Carrinho vazio\n";
-      }
+  } else {
+    // Android / Desktop
+    window.open(`https://wa.me/${numeroWhatsApp}?text=${encoded}`, "_blank");
+  }
+}
 
-      if (usuario && usuario.lat && usuario.lng) {
-        texto += `\nLocalização:\nhttps://www.google.com/maps?q=${usuario.lat},${usuario.lng}\n`;
-      } else {
-        texto += "\nLocalização não fornecida.\n";
-      }
-
-      const numero = "244931555634"; // número da lanchonete
-      const link = "https://wa.me/" + numero + "?text=" + encodeURIComponent(texto);
-
-      // 🔒 Safari / iOS / PWA SAFE
-      window.location.href = link;
-
-    } catch (e) {
-      alert("Erro ao abrir o WhatsApp.");
-      console.error(e);
-      btn.disabled = false;
-      btn.textContent = "Enviar pedido no WhatsApp";
-    }
-  });
-})();
 /* =======================
    INIT
 ======================= */
-
 atualizarCarrinho();
 inicializarMapa();
+
 </script>
 
 </body>
