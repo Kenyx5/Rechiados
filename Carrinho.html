@@ -168,24 +168,27 @@ function inicializarMapa() {
 ======================= */
 
 
+// Variáveis globais de exemplo
+let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+let usuario  = JSON.parse(localStorage.getItem("usuario")) || null;
 
-  (function () {
+(function () {
   const btn = document.getElementById("enviar");
   if (!btn) return;
 
   btn.addEventListener("click", () => {
+    // 🔒 Evita clique duplo
+    btn.disabled = true;
+    btn.textContent = "Abrindo WhatsApp...";
+
     try {
       let texto = "Meu pedido:\n";
 
-      if (Array.isArray(carrinho) && carrinho.length > 0) {
+      if (carrinho.length > 0) {
         carrinho.forEach((item, i) => {
           texto += `${i + 1}. ${item.nome} - ${item.preco} Kz\n`;
         });
-
-        const total = carrinho.reduce(
-          (s, item) => s + Number(item.preco || 0),
-          0
-        );
+        const total = carrinho.reduce((s, item) => s + Number(item.preco || 0), 0);
         texto += `\nTotal: ${total} Kz\n`;
       } else {
         texto += "Carrinho vazio\n";
@@ -197,15 +200,17 @@ function inicializarMapa() {
         texto += "\nLocalização não fornecida.\n";
       }
 
-      const numero = "244931555634";
+      const numero = "244931555634"; // número da lanchonete
       const link = "https://wa.me/" + numero + "?text=" + encodeURIComponent(texto);
 
-      // Safari / iOS / PWA SAFE
+      // 🔒 Safari / iOS / PWA SAFE
       window.location.href = link;
 
     } catch (e) {
       alert("Erro ao abrir o WhatsApp.");
       console.error(e);
+      btn.disabled = false;
+      btn.textContent = "Enviar pedido no WhatsApp";
     }
   });
 })();
