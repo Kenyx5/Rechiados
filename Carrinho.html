@@ -167,28 +167,48 @@ function inicializarMapa() {
    WHATSAPP
 ======================= */
 
-function enviarWhatsApp(localizacao) {
-  let texto = "Meu pedido:\n";
 
-  carrinho.forEach((item, i) => {
-    texto += `${i + 1}. ${item.nome} - ${item.preco} Kz\n`;
+
+  (function () {
+  const btn = document.getElementById("enviar");
+  if (!btn) return;
+
+  btn.addEventListener("click", () => {
+    try {
+      let texto = "Meu pedido:\n";
+
+      if (Array.isArray(carrinho) && carrinho.length > 0) {
+        carrinho.forEach((item, i) => {
+          texto += `${i + 1}. ${item.nome} - ${item.preco} Kz\n`;
+        });
+
+        const total = carrinho.reduce(
+          (s, item) => s + Number(item.preco || 0),
+          0
+        );
+        texto += `\nTotal: ${total} Kz\n`;
+      } else {
+        texto += "Carrinho vazio\n";
+      }
+
+      if (usuario && usuario.lat && usuario.lng) {
+        texto += `\nLocalização:\nhttps://www.google.com/maps?q=${usuario.lat},${usuario.lng}\n`;
+      } else {
+        texto += "\nLocalização não fornecida.\n";
+      }
+
+      const numero = "244931555634";
+      const link = "https://wa.me/" + numero + "?text=" + encodeURIComponent(texto);
+
+      // Safari / iOS / PWA SAFE
+      window.location.href = link;
+
+    } catch (e) {
+      alert("Erro ao abrir o WhatsApp.");
+      console.error(e);
+    }
   });
-
-  const total = carrinho.reduce((sum, item) => sum + parseInt(item.preco), 0);
-  texto += `\nTotal: ${total} Kz\n`;
-
-  if (localizacao) {
-    texto += `\nLocalização:\nhttps://www.google.com/maps?q=${localizacao.lat},${localizacao.lng}\n`;
-  } else {
-    texto += `\nLocalização não fornecida.\n`;
-  }
-
-  const numero = "244931555634";
-  const link = `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
-
-  // Safari-safe
-  window.location.href = link;
-}
+})();
 /* =======================
    INIT
 ======================= */
