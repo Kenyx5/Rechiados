@@ -4,7 +4,9 @@
   font-family: Sans-Serif;
   
 }
-
+body{
+  background-image: linear-gradient(to left ,#b99447);
+}
 .loader{
   position: fixed;
   inset: 0;
